@@ -1,6 +1,6 @@
-use frankenstein::client_reqwest::Bot;
-use frankenstein::methods::SendPhotoParams;
-use frankenstein::AsyncTelegramApi;
+use frakti::client_reqwest::Bot;
+use frakti::methods::SendPhotoParams;
+use frakti::AsyncTelegramApi;
 
 #[tokio::main]
 async fn main() {

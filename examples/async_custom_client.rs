@@ -1,14 +1,14 @@
 use std::time::Duration;
 
-use frankenstein::client_reqwest::Bot;
-use frankenstein::AsyncTelegramApi;
+use frakti::client_reqwest::Bot;
+use frakti::AsyncTelegramApi;
 
 static BASE_API_URL: &str = "https://api.telegram.org/bot";
 
 fn custom_client() -> Bot {
     let token = std::env::var("BOT_TOKEN").expect("Should have BOT_TOKEN as environment variable");
 
-    let client = frankenstein::reqwest::ClientBuilder::new()
+    let client = frakti::reqwest::ClientBuilder::new()
         .connect_timeout(Duration::from_secs(100))
         .timeout(Duration::from_secs(100))
         .build()

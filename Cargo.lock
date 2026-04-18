@@ -404,7 +404,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "frankenstein"
+name = "frakti"
 version = "0.49.0"
 dependencies = [
  "bon",

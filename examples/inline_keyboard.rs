@@ -1,7 +1,7 @@
-use frankenstein::client_ureq::Bot;
-use frankenstein::methods::SendMessageParams;
-use frankenstein::types::{InlineKeyboardButton, InlineKeyboardMarkup, ReplyMarkup};
-use frankenstein::TelegramApi;
+use frakti::client_ureq::Bot;
+use frakti::methods::SendMessageParams;
+use frakti::types::{InlineKeyboardButton, InlineKeyboardMarkup, ReplyMarkup};
+use frakti::TelegramApi;
 
 fn main() {
     let token = std::env::var("BOT_TOKEN").expect("Should have BOT_TOKEN as environment variable");

@@ -1,8 +1,8 @@
-use frankenstein::client_reqwest::Bot;
-use frankenstein::methods::{GetUpdatesParams, SendMessageParams};
-use frankenstein::types::{Message, ReplyParameters};
-use frankenstein::updates::UpdateContent;
-use frankenstein::AsyncTelegramApi;
+use frakti::client_reqwest::Bot;
+use frakti::methods::{GetUpdatesParams, SendMessageParams};
+use frakti::types::{Message, ReplyParameters};
+use frakti::updates::UpdateContent;
+use frakti::AsyncTelegramApi;
 
 #[tokio::main]
 async fn main() {

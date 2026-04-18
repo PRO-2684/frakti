@@ -1,8 +1,8 @@
-use frankenstein::client_ureq::Bot;
-use frankenstein::input_file::InputFile;
-use frankenstein::methods::UploadStickerFileParams;
-use frankenstein::stickers::StickerFormat;
-use frankenstein::TelegramApi;
+use frakti::client_ureq::Bot;
+use frakti::input_file::InputFile;
+use frakti::methods::UploadStickerFileParams;
+use frakti::stickers::StickerFormat;
+use frakti::TelegramApi;
 
 fn main() {
     let token = std::env::var("BOT_TOKEN").expect("Should have BOT_TOKEN as environment variable");

@@ -1,8 +1,8 @@
-use frankenstein::client_ureq::Bot;
-use frankenstein::methods::{GetUpdatesParams, SendMessageParams};
-use frankenstein::types::ReplyParameters;
-use frankenstein::updates::UpdateContent;
-use frankenstein::TelegramApi;
+use frakti::client_ureq::Bot;
+use frakti::methods::{GetUpdatesParams, SendMessageParams};
+use frakti::types::ReplyParameters;
+use frakti::updates::UpdateContent;
+use frakti::TelegramApi;
 
 fn main() {
     let token = std::env::var("BOT_TOKEN").expect("Should have BOT_TOKEN as environment variable");

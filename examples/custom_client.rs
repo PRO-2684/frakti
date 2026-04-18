@@ -1,18 +1,18 @@
 use std::time::Duration;
 
-use frankenstein::client_ureq::Bot;
-use frankenstein::TelegramApi;
+use frakti::client_ureq::Bot;
+use frakti::TelegramApi;
 
 static BASE_API_URL: &str = "https://api.telegram.org/bot";
 
 fn custom_client() -> Bot {
     let token = std::env::var("BOT_TOKEN").expect("Should have BOT_TOKEN as environment variable");
 
-    let config = frankenstein::ureq::Agent::config_builder()
+    let config = frakti::ureq::Agent::config_builder()
         .http_status_as_error(false)
         .timeout_global(Some(Duration::from_secs(100)))
         .build();
-    let request_agent = frankenstein::ureq::Agent::new_with_config(config);
+    let request_agent = frakti::ureq::Agent::new_with_config(config);
     let api_url = format!("{BASE_API_URL}{token}");
 
     Bot::builder()

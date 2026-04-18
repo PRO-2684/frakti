@@ -1,8 +1,8 @@
 use std::path::PathBuf;
 
-use frankenstein::methods::SendMessageParams;
-use frankenstein::response::ErrorResponse;
-use frankenstein::TelegramApi;
+use frakti::methods::SendMessageParams;
+use frakti::response::ErrorResponse;
+use frakti::TelegramApi;
 use isahc::prelude::*;
 use isahc::Request;
 

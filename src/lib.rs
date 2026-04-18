@@ -47,13 +47,13 @@ pub const BASE_API_URL: &str = "https://api.telegram.org/bot";
 
 #[deprecated(
     since = "0.39.0",
-    note = "enable the client-reqwest feature and use frankenstein::client_reqwest::Bot instead"
+    note = "enable the client-reqwest feature and use frakti::client_reqwest::Bot instead"
 )]
 #[doc(hidden)]
 pub struct AsyncApi;
 #[deprecated(
     since = "0.39.0",
-    note = "enable the client-ureq feature and use frankenstein::client_ureq::Bot instead"
+    note = "enable the client-ureq feature and use frakti::client_ureq::Bot instead"
 )]
 #[doc(hidden)]
 pub struct Api;

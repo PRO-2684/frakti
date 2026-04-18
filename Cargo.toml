@@ -1,5 +1,5 @@
 [package]
-name = "frankenstein"
+name = "frakti"
 version = "0.49.0"
 authors = [
     "Ayrat Badykov <ayratin555@gmail.com>",
@@ -10,7 +10,7 @@ description = "Telegram bot API client for Rust"
 edition = "2021"
 rust-version = "1.75.0"
 license = "WTFPL"
-repository = "https://github.com/ayrat555/frankenstein"
+repository = "https://github.com/PRO-2684/frakti"
 readme = "README.md"
 keywords = ["request", "http", "client", "bot", "telegram"]
 categories = ["web-programming::http-client"]

@@ -1,5 +1,5 @@
-use frankenstein::client_ureq::Bot;
-use frankenstein::TelegramApi;
+use frakti::client_ureq::Bot;
+use frakti::TelegramApi;
 
 fn main() {
     let token = std::env::var("BOT_TOKEN").expect("Should have BOT_TOKEN as environment variable");

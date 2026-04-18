@@ -1,5 +1,5 @@
-use frankenstein::client_reqwest::Bot;
-use frankenstein::AsyncTelegramApi;
+use frakti::client_reqwest::Bot;
+use frakti::AsyncTelegramApi;
 
 #[tokio::main]
 async fn main() {

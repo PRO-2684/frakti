@@ -1,9 +1,9 @@
-use frankenstein::client_ureq::Bot;
-use frankenstein::methods::{AnswerPreCheckoutQueryParams, GetUpdatesParams, SendInvoiceParams};
-use frankenstein::payments::LabeledPrice;
-use frankenstein::types::AllowedUpdate;
-use frankenstein::updates::UpdateContent;
-use frankenstein::TelegramApi;
+use frakti::client_ureq::Bot;
+use frakti::methods::{AnswerPreCheckoutQueryParams, GetUpdatesParams, SendInvoiceParams};
+use frakti::payments::LabeledPrice;
+use frakti::types::AllowedUpdate;
+use frakti::updates::UpdateContent;
+use frakti::TelegramApi;
 
 fn main() {
     let token = std::env::var("BOT_TOKEN").expect("Should have BOT_TOKEN as environment variable");
