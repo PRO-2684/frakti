@@ -5,7 +5,7 @@ use bon::Builder;
 use crate::trait_async::AsyncTelegramApi;
 use crate::Error;
 
-/// Asynchronous [`AsyncTelegramApi`] implementation with [`reqwest`]
+/// Asynchronous [`AsyncTelegramApi`] implementation with [`cyper`]
 #[derive(Debug, Clone, Builder)]
 #[must_use = "Bot needs to be used in order to be useful"]
 pub struct Bot {
@@ -13,11 +13,11 @@ pub struct Bot {
     pub api_url: String,
 
     #[builder(default = default_client())]
-    pub client: reqwest::Client,
+    pub client: cyper::Client,
 }
 
-fn default_client() -> reqwest::Client {
-    let client_builder = reqwest::ClientBuilder::new();
+fn default_client() -> cyper::Client {
+    let client_builder = cyper::ClientBuilder::new();
 
     #[cfg(not(target_arch = "wasm32"))]
     let client_builder = client_builder
@@ -38,7 +38,7 @@ impl Bot {
         Self::builder().api_url(api_url).build()
     }
 
-    async fn decode_response<Output>(response: reqwest::Response) -> Result<Output, Error>
+    async fn decode_response<Output>(response: cyper::Response) -> Result<Output, Error>
     where
         Output: serde::de::DeserializeOwned,
     {
@@ -52,10 +52,10 @@ impl Bot {
     }
 }
 
-impl From<reqwest::Error> for Error {
-    fn from(error: reqwest::Error) -> Self {
+impl From<cyper::Error> for Error {
+    fn from(error: cyper::Error) -> Self {
         // Prevent leakage of the bot token as its within the path
-        Self::HttpReqwest(error.without_url())
+        Self::HttpCyper(error.without_url())
     }
 }
 
@@ -97,7 +97,7 @@ impl AsyncTelegramApi for Bot {
     {
         #[cfg(not(target_arch = "wasm32"))]
         {
-            use reqwest::multipart;
+            use cyper::multipart;
             use serde_json::Value;
 
             let json_string = crate::json::encode(&params)?;

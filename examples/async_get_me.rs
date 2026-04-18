@@ -1,4 +1,4 @@
-use frakti::client_reqwest::Bot;
+use frakti::client_cyper::Bot;
 use frakti::AsyncTelegramApi;
 
 #[cyper::main]

@@ -128,7 +128,7 @@ jobs:
             features: --all-features
             os: ubuntu-latest
           - triple: wasm32-unknown-unknown
-            features: --features=client-reqwest
+            features: --features=client-cyper
             os: ubuntu-latest
 
           - triple: x86_64-apple-darwin

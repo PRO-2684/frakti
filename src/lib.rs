@@ -2,8 +2,8 @@
 #![cfg_attr(test, allow(dead_code))]
 #![doc = include_str!("../README.md")]
 
-#[cfg(feature = "client-reqwest")]
-pub use reqwest;
+#[cfg(feature = "client-cyper")]
+pub use cyper;
 #[cfg(feature = "client-ureq")]
 pub use ureq;
 
@@ -14,8 +14,8 @@ pub use self::trait_async::AsyncTelegramApi;
 #[cfg(feature = "trait-sync")]
 pub use self::trait_sync::TelegramApi;
 
-#[cfg(feature = "client-reqwest")]
-pub mod client_reqwest;
+#[cfg(feature = "client-cyper")]
+pub mod client_cyper;
 #[cfg(feature = "client-ureq")]
 pub mod client_ureq;
 mod error;
@@ -24,7 +24,7 @@ pub mod gifts;
 pub mod inline_mode;
 pub mod input_file;
 pub mod input_media;
-#[cfg(any(feature = "client-reqwest", feature = "client-ureq"))]
+#[cfg(any(feature = "client-cyper", feature = "client-ureq"))]
 mod json;
 mod macros;
 pub mod methods;
@@ -47,7 +47,7 @@ pub const BASE_API_URL: &str = "https://api.telegram.org/bot";
 
 #[deprecated(
     since = "0.39.0",
-    note = "enable the client-reqwest feature and use frakti::client_reqwest::Bot instead"
+    note = "enable the client-cyper feature and use frakti::client_cyper::Bot instead"
 )]
 #[doc(hidden)]
 pub struct AsyncApi;
