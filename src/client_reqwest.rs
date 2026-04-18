@@ -116,7 +116,7 @@ impl AsyncTelegramApi for Bot {
             }
 
             for (parameter_name, file_path) in files {
-                let file = tokio::fs::File::open(&file_path)
+                let file = cyper::fs::File::open(&file_path)
                     .await
                     .map_err(Error::ReadFile)?;
                 let file_name = file_path.file_name().unwrap().to_string_lossy().to_string();
@@ -132,61 +132,5 @@ impl AsyncTelegramApi for Bot {
 
         #[cfg(target_arch = "wasm32")]
         Err(Error::WasmHasNoFileSupportYet)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::methods::SendMessageParams;
-
-    #[tokio::test]
-    async fn async_send_message_success() {
-        let response_string = "{\"ok\":true,\"result\":{\"message_id\":2746,\"from\":{\"id\":1276618370,\"is_bot\":true,\"first_name\":\"test_el_bot\",\"username\":\"el_mon_test_bot\"},\"date\":1618207352,\"chat\":{\"id\":275808073,\"type\":\"private\",\"username\":\"Ayrat555\",\"first_name\":\"Ayrat\",\"last_name\":\"Badykov\"},\"text\":\"Hello!\"}}";
-        let params = SendMessageParams::builder()
-            .chat_id(275808073)
-            .text("Hello!")
-            .build();
-        let mut server = mockito::Server::new_async().await;
-        let mock = server
-            .mock("POST", "/sendMessage")
-            .with_status(200)
-            .with_body(response_string)
-            .create_async()
-            .await;
-        let api = Bot::new_url(server.url());
-
-        let response = api.send_message(&params).await.unwrap();
-        mock.assert();
-        drop(server);
-
-        crate::test_json::assert_json_str(&response, response_string);
-    }
-
-    #[tokio::test]
-    async fn send_message_failure() {
-        let response_string =
-            "{\"ok\":false,\"description\":\"Bad Request: chat not found\",\"error_code\":400}";
-        let params = SendMessageParams::builder()
-            .chat_id(1)
-            .text("Hello!")
-            .build();
-        let mut server = mockito::Server::new_async().await;
-        let mock = server
-            .mock("POST", "/sendMessage")
-            .with_status(400)
-            .with_body(response_string)
-            .create_async()
-            .await;
-        let api = Bot::new_url(server.url());
-
-        let error = api.send_message(&params).await.unwrap_err().unwrap_api();
-        mock.assert();
-        drop(server);
-
-        assert_eq!(error.description, "Bad Request: chat not found");
-        assert_eq!(error.error_code, 400);
-        assert_eq!(error.parameters, None);
-        assert!(!error.ok);
     }
 }

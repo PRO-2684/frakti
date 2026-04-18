@@ -18,7 +18,7 @@ fn custom_client() -> Bot {
     Bot::builder().api_url(api_url).client(client).build()
 }
 
-#[tokio::main]
+#[cyper::main]
 async fn main() {
     let bot = custom_client();
 

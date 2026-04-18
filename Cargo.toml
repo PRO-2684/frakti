@@ -19,7 +19,7 @@ categories = ["web-programming::http-client"]
 all-features = true
 
 [features]
-client-reqwest = ["trait-async", "dep:reqwest", "dep:tokio", "dep:serde_json"]
+client-cyper = ["trait-async", "dep:cyper", "dep:compio", "dep:serde_json"]
 client-ureq = ["trait-sync", "dep:ureq", "dep:multipart", "dep:mime_guess", "dep:serde_json"]
 trait-async = []
 trait-sync = []
@@ -45,29 +45,12 @@ serde_json = { version = "1.0.45", optional = true }
 serde_with = { version = "3.0.0", default-features = false, features = ["macros"] }
 thiserror = "2"
 ureq = { version = "3.0.0", optional = true, default-features = false, features = ["rustls"] }
-
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies.reqwest]
-version = "0.13"
-default-features = false
-features = ["multipart", "stream", "rustls"]
-optional = true
-
-[target.'cfg(target_arch = "wasm32")'.dependencies.reqwest]
-version = "0.13"
-default-features = false
-features = ["multipart", "stream"]
-optional = true
-
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies.tokio]
-version = "1"
-features = ["fs"]
-optional = true
+compio = { version = "0.18.0", optional = true, default-features = false, features = ["macro"] }
+cyper = { version = "0.8.3", optional = true, default-features = false }
 
 [dev-dependencies]
 isahc = "1"
-mockito = "1.0"
 serde_json = "1"
-tokio = { version = "1", features = ["full"] }
 
 [[example]]
 name = "get_me"
