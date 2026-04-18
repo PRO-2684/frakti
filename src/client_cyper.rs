@@ -83,19 +83,15 @@ impl AsyncTelegramApi for Bot {
         Output: DeserializeOwned,
     {
         use cyper::multipart;
-        use serde_json::Value;
 
-        // TODO: There should be a better way to do this
-        let json_string = crate::json::encode(&params)?;
-        let json_struct: serde_json::Map<String, Value> =
-            serde_json::from_str(&json_string).unwrap();
+        let json_struct = crate::json::encode_object(&params)?;
         let file_keys: Vec<&str> = files.iter().map(|(key, _)| *key).collect();
 
         let mut form = multipart::Form::new();
         for (key, val) in json_struct {
             if !file_keys.contains(&key.as_str()) {
                 form = match val {
-                    Value::String(val) => form.text(key, val),
+                    serde_json::Value::String(val) => form.text(key, val),
                     other => form.text(key, other.to_string()),
                 };
             }
