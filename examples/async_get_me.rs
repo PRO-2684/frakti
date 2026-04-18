@@ -1,7 +1,7 @@
 use frakti::client_cyper::Bot;
 use frakti::AsyncTelegramApi;
 
-#[cyper::main]
+#[compio::main]
 async fn main() {
     let token = std::env::var("BOT_TOKEN").expect("Should have BOT_TOKEN as environment variable");
 

@@ -2,7 +2,7 @@ use frakti::client_cyper::Bot;
 use frakti::methods::SendPhotoParams;
 use frakti::AsyncTelegramApi;
 
-#[cyper::main]
+#[compio::main]
 async fn main() {
     let token = std::env::var("BOT_TOKEN").expect("Should have BOT_TOKEN as environment variable");
     let chat_id = std::env::var("TARGET_CHAT")

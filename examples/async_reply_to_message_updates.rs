@@ -4,7 +4,7 @@ use frakti::types::{Message, ReplyParameters};
 use frakti::updates::UpdateContent;
 use frakti::AsyncTelegramApi;
 
-#[cyper::main]
+#[compio::main]
 async fn main() {
     let token = std::env::var("BOT_TOKEN").expect("Should have BOT_TOKEN as environment variable");
 
@@ -22,9 +22,10 @@ async fn main() {
                     if let UpdateContent::Message(message) = update.content {
                         let bot_clone = bot.clone();
 
-                        cyper::spawn(async move {
+                        compio::runtime::spawn(async move {
                             process_message(*message, bot_clone).await;
-                        });
+                        })
+                        .detach();
                     }
                     update_params.offset = Some(i64::from(update.update_id) + 1);
                 }
