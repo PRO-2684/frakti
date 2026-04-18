@@ -11,3 +11,5 @@ Frakti is a fork of [frankenstein](https://github.com/ayrat555/frankenstein) cra
 | `async-trait` | Used | Not used |
 | Multi-threaded runtime | Supported | Not supported |
 | Single-threaded runtime | Need workarounds | Supported |
+
+To summarize, frakti is your choice if you want a frankenstein alternative on a non-WASM platform and a single-threaded async runtime (like `compio`).
