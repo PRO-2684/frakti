@@ -6,13 +6,13 @@ pub enum Error {
     #[error("Api Error {0:?}")]
     Api(ErrorResponse),
 
-    #[cfg(any(feature = "client-cyper", feature = "client-ureq"))]
+    #[cfg(feature = "client-cyper")]
     #[error("JSON Decode Error: {source} on {input}")]
     JsonDecode {
         source: serde_json::Error,
         input: String,
     },
-    #[cfg(any(feature = "client-cyper", feature = "client-ureq"))]
+    #[cfg(feature = "client-cyper")]
     #[error("JSON Encode Error: {source} on {input}")]
     JsonEncode {
         source: serde_json::Error,
@@ -30,9 +30,6 @@ pub enum Error {
     #[error("HTTP error: {0}")]
     HttpCyper(#[source] cyper::Error),
 
-    #[cfg(feature = "client-ureq")]
-    #[error("HTTP error: {0}")]
-    HttpUreq(#[from] ureq::Error),
 }
 
 impl Error {

@@ -48,14 +48,14 @@ impl From<InputFile> for FileUpload {
     }
 }
 
-#[cfg(any(feature = "trait-sync", feature = "trait-async"))]
+#[cfg(feature = "trait-async")]
 pub(crate) trait HasInputFile {
     fn clone_path(&self) -> Option<PathBuf>;
     fn replace_attach(&mut self, name: &str) -> Option<PathBuf>;
     fn replace_attach_dyn(&mut self, index: impl FnOnce() -> usize) -> Option<(String, PathBuf)>;
 }
 
-#[cfg(any(feature = "trait-sync", feature = "trait-async"))]
+#[cfg(feature = "trait-async")]
 impl HasInputFile for FileUpload {
     fn clone_path(&self) -> Option<PathBuf> {
         match self {
@@ -92,7 +92,7 @@ impl HasInputFile for FileUpload {
     }
 }
 
-#[cfg(any(feature = "trait-sync", feature = "trait-async"))]
+#[cfg(feature = "trait-async")]
 impl HasInputFile for Option<FileUpload> {
     fn clone_path(&self) -> Option<PathBuf> {
         match self {

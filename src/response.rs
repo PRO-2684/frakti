@@ -1,6 +1,6 @@
 //! Raw response objects returned by the Telegram API.
 //!
-//! Mainly useful when implementing the `TelegramApi` trait.
+//! Mainly useful when implementing the `AsyncTelegramApi` trait.
 
 #![allow(clippy::module_name_repetitions)]
 
