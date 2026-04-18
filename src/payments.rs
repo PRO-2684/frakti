@@ -2,9 +2,11 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::gifts::Gift;
-use crate::macros::{apistruct, apply};
-use crate::types::{Chat, PaidMedia, User};
+use super::{
+    gifts::Gift,
+    macros::{apistruct, apply},
+    types::{Chat, PaidMedia, User},
+};
 
 #[apply(apistruct!)]
 #[derive(Eq)]

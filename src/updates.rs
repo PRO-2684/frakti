@@ -2,13 +2,15 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::inline_mode::{ChosenInlineResult, InlineQuery};
-use crate::macros::{apistruct, apply};
-use crate::payments::{PaidMediaPurchased, PreCheckoutQuery, ShippingQuery};
-use crate::types::{
-    AllowedUpdate, BusinessConnection, BusinessMessagesDeleted, CallbackQuery, ChatBoostRemoved,
-    ChatBoostUpdated, ChatJoinRequest, ChatMemberUpdated, ManagedBotUpdated, Message,
-    MessageReactionCountUpdated, MessageReactionUpdated, Poll, PollAnswer,
+use super::{
+    inline_mode::{ChosenInlineResult, InlineQuery},
+    macros::{apistruct, apply},
+    payments::{PaidMediaPurchased, PreCheckoutQuery, ShippingQuery},
+    types::{
+        AllowedUpdate, BusinessConnection, BusinessMessagesDeleted, CallbackQuery,
+        ChatBoostRemoved, ChatBoostUpdated, ChatJoinRequest, ChatMemberUpdated, ManagedBotUpdated,
+        Message, MessageReactionCountUpdated, MessageReactionUpdated, Poll, PollAnswer,
+    },
 };
 
 /// Represents an incoming update from telegram.

@@ -1,8 +1,10 @@
 use serde::{Deserialize, Serialize};
 
-use crate::macros::{apistruct, apply};
-use crate::stickers::Sticker;
-use crate::types::{Chat, MessageEntity, User};
+use super::{
+    macros::{apistruct, apply},
+    stickers::Sticker,
+    types::{Chat, MessageEntity, User},
+};
 
 #[apply(apistruct!)]
 #[derive(Eq)]

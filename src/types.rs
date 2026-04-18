@@ -2,13 +2,15 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::games::{CallbackGame, Game};
-use crate::gifts::{AcceptedGiftTypes, GiftInfo, UniqueGiftColors, UniqueGiftInfo};
-use crate::macros::{apistruct, apply};
-use crate::parse_mode::ParseMode;
-use crate::passport::PassportData;
-use crate::payments::{Invoice, RefundedPayment, StarAmount, SuccessfulPayment};
-use crate::stickers::Sticker;
+use super::{
+    games::{CallbackGame, Game},
+    gifts::{AcceptedGiftTypes, GiftInfo, UniqueGiftColors, UniqueGiftInfo},
+    macros::{apistruct, apply},
+    parse_mode::ParseMode,
+    passport::PassportData,
+    payments::{Invoice, RefundedPayment, StarAmount, SuccessfulPayment},
+    stickers::Sticker,
+};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(untagged)]

@@ -2,10 +2,12 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::input_file::FileUpload;
-use crate::macros::{apistruct, apply};
-use crate::parse_mode::ParseMode;
-use crate::types::MessageEntity;
+use super::{
+    input_file::FileUpload,
+    macros::{apistruct, apply},
+    parse_mode::ParseMode,
+    types::MessageEntity,
+};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(tag = "type", rename_all = "snake_case")]

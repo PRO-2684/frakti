@@ -1,7 +1,9 @@
+use serde::ser::Serialize;
+
 #[track_caller]
 pub fn assert_json_str<T>(value: &T, expected: &str)
 where
-    T: serde::ser::Serialize,
+    T: Serialize,
 {
     let actual = serde_json::to_string(value).expect("Should be able to stringify to JSON");
     assert!(

@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::macros::{apistruct, apply};
+use super::macros::{apistruct, apply};
 
 #[apply(apistruct!)]
 #[derive(Eq)]

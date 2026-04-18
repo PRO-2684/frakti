@@ -1,21 +1,23 @@
 //! Parameters of [Bot API methods](https://core.telegram.org/bots/api#available-methods).
 
-use crate::gifts::AcceptedGiftTypes;
-use crate::inline_mode::{InlineQueryResult, InlineQueryResultsButton};
-use crate::input_file::{FileUpload, InputFile};
-use crate::input_media::{
-    InputMedia, InputPaidMedia, InputProfilePhoto, InputStoryContent, MediaGroupInputMedia,
-};
-use crate::macros::{apistruct, apply};
-use crate::parse_mode::ParseMode;
-use crate::passport::PassportElementError;
-use crate::payments::{LabeledPrice, ShippingOption};
-use crate::stickers::{InputSticker, MaskPosition, StickerFormat, StickerType};
-use crate::types::{
-    AllowedUpdate, BotCommand, BotCommandScope, ChatAction, ChatAdministratorRights, ChatId,
-    ChatPermissions, InlineKeyboardMarkup, InputChecklist, InputPollOption, KeyboardButton,
-    LinkPreviewOptions, MenuButton, MessageEntity, PollType, ReactionType, ReplyMarkup,
-    ReplyParameters, StoryArea, SuggestedPostParameters,
+use super::{
+    gifts::AcceptedGiftTypes,
+    inline_mode::{InlineQueryResult, InlineQueryResultsButton},
+    input_file::{FileUpload, InputFile},
+    input_media::{
+        InputMedia, InputPaidMedia, InputProfilePhoto, InputStoryContent, MediaGroupInputMedia,
+    },
+    macros::{apistruct, apply},
+    parse_mode::ParseMode,
+    passport::PassportElementError,
+    payments::{LabeledPrice, ShippingOption},
+    stickers::{InputSticker, MaskPosition, StickerFormat, StickerType},
+    types::{
+        AllowedUpdate, BotCommand, BotCommandScope, ChatAction, ChatAdministratorRights, ChatId,
+        ChatPermissions, InlineKeyboardMarkup, InputChecklist, InputPollOption, KeyboardButton,
+        LinkPreviewOptions, MenuButton, MessageEntity, PollType, ReactionType, ReplyMarkup,
+        ReplyParameters, StoryArea, SuggestedPostParameters,
+    },
 };
 
 #[apply(apistruct!)]

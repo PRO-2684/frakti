@@ -1,11 +1,14 @@
 use std::{fmt::Debug, path::PathBuf};
 
 use bon::Builder;
-use cyper::Client;
+use compio::fs::File;
+use cyper::{
+    multipart::{Form, Part},
+    Client, Error as CyperError, Response,
+};
 use serde::{de::DeserializeOwned, Serialize};
 
-use crate::trait_async::AsyncTelegramApi;
-use crate::{Error, BASE_API_URL};
+use super::{json::encode_object, trait_async::AsyncTelegramApi, Error, BASE_API_URL};
 
 /// Asynchronous [`AsyncTelegramApi`] implementation with [`cyper`]
 #[derive(Debug, Clone, Builder)]
@@ -29,9 +32,9 @@ impl Bot {
         Self::builder().api_url(api_url).build()
     }
 
-    async fn decode_response<Output>(response: cyper::Response) -> Result<Output, Error>
+    async fn decode_response<Output>(response: Response) -> Result<Output, Error>
     where
-        Output: serde::de::DeserializeOwned,
+        Output: DeserializeOwned,
     {
         let success = response.status().is_success();
         if success {
@@ -42,8 +45,8 @@ impl Bot {
     }
 }
 
-impl From<cyper::Error> for Error {
-    fn from(error: cyper::Error) -> Self {
+impl From<CyperError> for Error {
+    fn from(error: CyperError) -> Self {
         Self::HttpCyper(error)
     }
 }
@@ -57,8 +60,8 @@ impl AsyncTelegramApi for Bot {
         params: Option<Params>,
     ) -> Result<Output, Self::Error>
     where
-        Params: serde::ser::Serialize + std::fmt::Debug + std::marker::Send,
-        Output: serde::de::DeserializeOwned,
+        Params: Serialize + Debug + Send,
+        Output: DeserializeOwned,
     {
         let url = format!("{}/{method}", self.api_url);
         let mut prepared_request = self
@@ -82,12 +85,10 @@ impl AsyncTelegramApi for Bot {
         Params: Serialize + Debug + Send,
         Output: DeserializeOwned,
     {
-        use cyper::multipart;
-
-        let json_struct = crate::json::encode_object(&params)?;
+        let json_struct = encode_object(&params)?;
         let file_keys: Vec<&str> = files.iter().map(|(key, _)| *key).collect();
 
-        let mut form = multipart::Form::new();
+        let mut form = Form::new();
         for (key, val) in json_struct {
             if !file_keys.contains(&key.as_str()) {
                 form = match val {
@@ -98,11 +99,9 @@ impl AsyncTelegramApi for Bot {
         }
 
         for (parameter_name, file_path) in files {
-            let file = compio::fs::File::open(&file_path)
-                .await
-                .map_err(Error::ReadFile)?;
+            let file = File::open(&file_path).await.map_err(Error::ReadFile)?;
             let file_name = file_path.file_name().unwrap().to_string_lossy().to_string();
-            let part = multipart::Part::stream(file).file_name(file_name);
+            let part = Part::stream(file).file_name(file_name);
             form = form.part(parameter_name.to_owned(), part);
         }
 

@@ -5,10 +5,10 @@
 #[cfg(feature = "client-cyper")]
 pub use cyper;
 
-pub use self::error::Error;
-pub use self::parse_mode::ParseMode;
+pub use error::Error;
+pub use parse_mode::ParseMode;
 #[cfg(feature = "trait-async")]
-pub use self::trait_async::AsyncTelegramApi;
+pub use trait_async::AsyncTelegramApi;
 
 #[cfg(feature = "client-cyper")]
 pub mod client_cyper;

@@ -1,4 +1,4 @@
-use crate::Error;
+use super::Error;
 
 /// Shortcut for [`serde_json::to_value`] producing a JSON object with [`crate::Error`].
 pub fn encode_object<T>(value: &T) -> Result<serde_json::Map<String, serde_json::Value>, Error>

@@ -1,22 +1,31 @@
 #![allow(async_fn_in_trait, reason = "I don't care about Send")]
 
-use std::path::PathBuf;
+use std::{fmt::Debug, path::PathBuf};
 
-use crate::games::GameHighScore;
-use crate::gifts::{Gifts, OwnedGifts};
-use crate::inline_mode::{PreparedInlineMessage, PreparedKeyboardButton, SentWebAppMessage};
-use crate::input_file::HasInputFile;
-use crate::input_media::{InputMedia, InputProfilePhoto, InputStoryContent, MediaGroupInputMedia};
-use crate::payments::{StarAmount, StarTransactions};
-use crate::response::{MessageOrBool, MethodResponse};
-use crate::stickers::{Sticker, StickerSet};
-use crate::types::{
-    BotCommand, BotDescription, BotName, BotShortDescription, BusinessConnection,
-    ChatAdministratorRights, ChatFullInfo, ChatInviteLink, ChatMember, File, ForumTopic,
-    MenuButton, Message, MessageId, Poll, Story, User, UserChatBoosts, UserProfileAudios,
-    UserProfilePhotos,
+use serde::{de::DeserializeOwned, ser::Serialize};
+
+use super::{
+    games::GameHighScore,
+    gifts::{Gifts, OwnedGifts},
+    inline_mode::{PreparedInlineMessage, PreparedKeyboardButton, SentWebAppMessage},
+    input_file::HasInputFile,
+    input_media::{InputMedia, InputProfilePhoto, InputStoryContent, MediaGroupInputMedia},
+    methods::{
+        AddStickerToSetParams, CreateNewStickerSetParams, EditMessageMediaParams, EditStoryParams,
+        PostStoryParams, SetBusinessAccountProfilePhotoParams, SetChatPhotoParams,
+        SetMyProfilePhotoParams, UploadStickerFileParams,
+    },
+    payments::{StarAmount, StarTransactions},
+    response::{MessageOrBool, MethodResponse},
+    stickers::{Sticker, StickerSet},
+    types::{
+        BotCommand, BotDescription, BotName, BotShortDescription, BusinessConnection,
+        ChatAdministratorRights, ChatFullInfo, ChatInviteLink, ChatMember, File, ForumTopic,
+        MenuButton, Message, MessageId, Poll, Story, User, UserChatBoosts, UserProfileAudios,
+        UserProfilePhotos,
+    },
+    updates::{Update, WebhookInfo},
 };
-use crate::updates::{Update, WebhookInfo};
 
 macro_rules! request {
     ($name:ident, $return:ty) => {
@@ -182,7 +191,7 @@ where
 
     async fn set_chat_photo(
         &self,
-        params: &crate::methods::SetChatPhotoParams,
+        params: &SetChatPhotoParams,
     ) -> Result<MethodResponse<bool>, Self::Error> {
         let photo = &params.photo;
         self.request_with_form_data("setChatPhoto", params, vec![("photo", photo.path.clone())])
@@ -229,7 +238,7 @@ where
 
     async fn set_my_profile_photo(
         &self,
-        params: &crate::methods::SetMyProfilePhotoParams,
+        params: &SetMyProfilePhotoParams,
     ) -> Result<MethodResponse<bool>, Self::Error> {
         let mut files = Vec::new();
 
@@ -258,7 +267,7 @@ where
 
     async fn edit_message_media(
         &self,
-        params: &crate::methods::EditMessageMediaParams,
+        params: &EditMessageMediaParams,
     ) -> Result<MethodResponse<MessageOrBool>, Self::Error> {
         let mut files = Vec::new();
 
@@ -310,7 +319,7 @@ where
 
     async fn upload_sticker_file(
         &self,
-        params: &crate::methods::UploadStickerFileParams,
+        params: &UploadStickerFileParams,
     ) -> Result<MethodResponse<File>, Self::Error> {
         let sticker = &params.sticker;
         self.request_with_form_data(
@@ -323,7 +332,7 @@ where
 
     async fn create_new_sticker_set(
         &self,
-        params: &crate::methods::CreateNewStickerSetParams,
+        params: &CreateNewStickerSetParams,
     ) -> Result<MethodResponse<bool>, Self::Error> {
         let mut files = Vec::new();
 
@@ -347,7 +356,7 @@ where
 
     async fn add_sticker_to_set(
         &self,
-        params: &crate::methods::AddStickerToSetParams,
+        params: &AddStickerToSetParams,
     ) -> Result<MethodResponse<bool>, Self::Error> {
         let mut files = Vec::new();
         let mut params = params.clone();
@@ -383,7 +392,7 @@ where
 
     async fn set_business_account_profile_photo(
         &self,
-        params: &crate::methods::SetBusinessAccountProfilePhotoParams,
+        params: &SetBusinessAccountProfilePhotoParams,
     ) -> Result<MethodResponse<bool>, Self::Error> {
         let mut files = Vec::new();
 
@@ -418,7 +427,7 @@ where
 
     async fn post_story(
         &self,
-        params: &crate::methods::PostStoryParams,
+        params: &PostStoryParams,
     ) -> Result<MethodResponse<Story>, Self::Error> {
         let mut files = Vec::new();
 
@@ -445,7 +454,7 @@ where
 
     async fn edit_story(
         &self,
-        params: &crate::methods::EditStoryParams,
+        params: &EditStoryParams,
     ) -> Result<MethodResponse<Story>, Self::Error> {
         let mut files = Vec::new();
 
@@ -496,8 +505,8 @@ where
         files: Vec<(&str, PathBuf)>,
     ) -> Result<Output, Self::Error>
     where
-        Params: serde::ser::Serialize + std::fmt::Debug + std::marker::Send,
-        Output: serde::de::DeserializeOwned,
+        Params: Serialize + Debug + Send,
+        Output: DeserializeOwned,
     {
         if files.is_empty() {
             self.request(method_name, Some(params)).await
@@ -513,8 +522,8 @@ where
         params: Option<Params>,
     ) -> Result<Output, Self::Error>
     where
-        Params: serde::ser::Serialize + std::fmt::Debug + std::marker::Send,
-        Output: serde::de::DeserializeOwned;
+        Params: Serialize + Debug + Send,
+        Output: DeserializeOwned;
 
     async fn request_with_form_data<Params, Output>(
         &self,
@@ -523,6 +532,6 @@ where
         files: Vec<(&str, PathBuf)>,
     ) -> Result<Output, Self::Error>
     where
-        Params: serde::ser::Serialize + std::fmt::Debug + std::marker::Send,
-        Output: serde::de::DeserializeOwned;
+        Params: Serialize + Debug + Send,
+        Output: DeserializeOwned;
 }

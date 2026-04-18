@@ -4,11 +4,11 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::macros::{apistruct, apply};
-use crate::parse_mode::ParseMode;
-use crate::payments::LabeledPrice;
-use crate::types::{
-    InlineKeyboardMarkup, LinkPreviewOptions, Location, MessageEntity, User, WebAppInfo,
+use super::{
+    macros::{apistruct, apply},
+    parse_mode::ParseMode,
+    payments::LabeledPrice,
+    types::{InlineKeyboardMarkup, LinkPreviewOptions, Location, MessageEntity, User, WebAppInfo},
 };
 
 #[apply(apistruct!)]
