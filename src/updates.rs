@@ -34,6 +34,7 @@ pub enum UpdateContent {
     BusinessMessage(Box<Message>),
     EditedBusinessMessage(Box<Message>),
     DeletedBusinessMessages(BusinessMessagesDeleted),
+    GuestMessage(Box<Message>),
     MessageReaction(MessageReactionUpdated),
     MessageReactionCount(MessageReactionCountUpdated),
     InlineQuery(InlineQuery),

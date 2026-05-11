@@ -2,17 +2,22 @@ use std::path::PathBuf;
 
 use crate::games::GameHighScore;
 use crate::gifts::{Gifts, OwnedGifts};
-use crate::inline_mode::{PreparedInlineMessage, PreparedKeyboardButton, SentWebAppMessage};
+use crate::inline_mode::{
+    PreparedInlineMessage, PreparedKeyboardButton, SentGuestMessage, SentWebAppMessage,
+};
 use crate::input_file::HasInputFile;
-use crate::input_media::{InputMedia, InputProfilePhoto, InputStoryContent, MediaGroupInputMedia};
+use crate::input_media::{
+    InputMedia, InputPollMedia, InputPollOptionMedia, InputProfilePhoto, InputStoryContent,
+    MediaGroupInputMedia,
+};
 use crate::payments::{StarAmount, StarTransactions};
 use crate::response::{MessageOrBool, MethodResponse};
 use crate::stickers::{Sticker, StickerSet};
 use crate::types::{
-    BotCommand, BotDescription, BotName, BotShortDescription, BusinessConnection,
-    ChatAdministratorRights, ChatFullInfo, ChatInviteLink, ChatMember, File, ForumTopic,
-    MenuButton, Message, MessageId, Poll, Story, User, UserChatBoosts, UserProfileAudios,
-    UserProfilePhotos,
+    BotAccessSettings, BotCommand, BotDescription, BotName, BotShortDescription,
+    BusinessConnection, ChatAdministratorRights, ChatFullInfo, ChatInviteLink, ChatMember, File,
+    ForumTopic, MenuButton, Message, MessageId, Poll, Story, User, UserChatBoosts,
+    UserProfileAudios, UserProfilePhotos,
 };
 use crate::updates::{Update, WebhookInfo};
 
@@ -119,6 +124,10 @@ where
                 MediaGroupInputMedia::Document(document) => {
                     replace_attach!(document.media);
                 }
+                MediaGroupInputMedia::LivePhoto(live_photo) => {
+                    replace_attach!(live_photo.media);
+                    replace_attach!(live_photo.photo);
+                }
                 MediaGroupInputMedia::Photo(photo) => {
                     replace_attach!(photo.media);
                 }
@@ -144,6 +153,7 @@ where
     request_f!(sendAnimation, Message, animation, thumbnail);
     request_f!(sendVoice, Message, voice);
     request_f!(sendVideoNote, Message, video_note, thumbnail);
+    request_f!(sendLivePhoto, Message, media, photo);
     request!(sendPaidMedia, Message);
     request!(sendLocation, Message);
     request!(editMessageLiveLocation, MessageOrBool);
@@ -152,7 +162,113 @@ where
     request!(editMessageChecklist, MessageOrBool);
     request!(sendVenue, Message);
     request!(sendContact, Message);
-    request!(sendPoll, Message);
+    async fn send_poll(
+        &self,
+        params: &crate::methods::SendPollParams,
+    ) -> Result<MethodResponse<Message>, Self::Error> {
+        fn replace_poll_media_files(
+            media: &mut InputPollMedia,
+            files: &mut Vec<(String, PathBuf)>,
+        ) {
+            macro_rules! replace_attach {
+                ($base:ident. $property:ident) => {
+                    if let Some(file) = $base.$property.replace_attach_dyn(|| files.len()) {
+                        files.push(file);
+                    }
+                };
+            }
+
+            match media {
+                InputPollMedia::Animation(animation) => {
+                    replace_attach!(animation.media);
+                    replace_attach!(animation.thumbnail);
+                }
+                InputPollMedia::Audio(audio) => {
+                    replace_attach!(audio.media);
+                    replace_attach!(audio.thumbnail);
+                }
+                InputPollMedia::Document(document) => {
+                    replace_attach!(document.media);
+                    replace_attach!(document.thumbnail);
+                }
+                InputPollMedia::LivePhoto(live_photo) => {
+                    replace_attach!(live_photo.media);
+                    replace_attach!(live_photo.photo);
+                }
+                InputPollMedia::Location(_) => {}
+                InputPollMedia::Photo(photo) => {
+                    replace_attach!(photo.media);
+                }
+                InputPollMedia::Venue(_) => {}
+                InputPollMedia::Video(video) => {
+                    replace_attach!(video.media);
+                    replace_attach!(video.cover);
+                    replace_attach!(video.thumbnail);
+                }
+            }
+        }
+
+        fn replace_poll_option_media_files(
+            media: &mut InputPollOptionMedia,
+            files: &mut Vec<(String, PathBuf)>,
+        ) {
+            macro_rules! replace_attach {
+                ($base:ident. $property:ident) => {
+                    if let Some(file) = $base.$property.replace_attach_dyn(|| files.len()) {
+                        files.push(file);
+                    }
+                };
+            }
+
+            match media {
+                InputPollOptionMedia::Animation(animation) => {
+                    replace_attach!(animation.media);
+                    replace_attach!(animation.thumbnail);
+                }
+                InputPollOptionMedia::LivePhoto(live_photo) => {
+                    replace_attach!(live_photo.media);
+                    replace_attach!(live_photo.photo);
+                }
+                InputPollOptionMedia::Location(_) => {}
+                InputPollOptionMedia::Photo(photo) => {
+                    replace_attach!(photo.media);
+                }
+                InputPollOptionMedia::Sticker(sticker) => {
+                    replace_attach!(sticker.media);
+                }
+                InputPollOptionMedia::Venue(_) => {}
+                InputPollOptionMedia::Video(video) => {
+                    replace_attach!(video.media);
+                    replace_attach!(video.cover);
+                    replace_attach!(video.thumbnail);
+                }
+            }
+        }
+
+        let mut files = Vec::new();
+        let mut params = params.clone();
+
+        if let Some(media) = &mut params.media {
+            replace_poll_media_files(media, &mut files);
+        }
+        if let Some(media) = &mut params.explanation_media {
+            replace_poll_media_files(media, &mut files);
+        }
+        for option in &mut params.options {
+            if let Some(media) = &mut option.media {
+                replace_poll_option_media_files(media, &mut files);
+            }
+        }
+
+        let files_with_str_names = files
+            .iter()
+            .map(|(key, path)| (key.as_str(), path.clone()))
+            .collect();
+
+        self.request_with_possible_form_data("sendPoll", &params, files_with_str_names)
+            .await
+    }
+
     request!(sendDice, Message);
     request!(sendMessageDraft, bool);
     request!(sendChatAction, bool);
@@ -161,6 +277,8 @@ where
     request!(getUserProfileAudios, UserProfileAudios);
     request!(getManagedBotToken, String);
     request!(replaceManagedBotToken, String);
+    request!(getManagedBotAccessSettings, BotAccessSettings);
+    request!(setManagedBotAccessSettings, bool);
     request!(setUserEmojiStatus, bool);
     request!(getFile, File);
     request!(banChatMember, bool);
@@ -201,6 +319,7 @@ where
     request!(getChatAdministrators, Vec<ChatMember>);
     request!(getChatMemberCount, u32);
     request!(getChatMember, ChatMember);
+    request!(getUserPersonalChatMessages, Vec<Message>);
     request!(setChatStickerSet, bool);
     request!(deleteChatStickerSet, bool);
     request_nb!(getForumTopicIconStickers, Vec<Sticker>);
@@ -216,6 +335,7 @@ where
     request!(hideGeneralForumTopic, bool);
     request!(unhideGeneralForumTopic, bool);
     request!(answerCallbackQuery, bool);
+    request!(answerGuestQuery, SentGuestMessage);
     request!(getUserChatBoosts, UserChatBoosts);
     request!(getBusinessConnection, BusinessConnection);
     request!(getMyCommands, Vec<BotCommand>);
@@ -286,6 +406,10 @@ where
                 replace_attach!(audio.media);
                 replace_attach!(audio.thumbnail);
             }
+            InputMedia::LivePhoto(live_photo) => {
+                replace_attach!(live_photo.media);
+                replace_attach!(live_photo.photo);
+            }
             InputMedia::Photo(photo) => {
                 replace_attach!(photo.media);
             }
@@ -306,6 +430,8 @@ where
     request!(declineSuggestedPost, bool);
     request!(deleteMessage, bool);
     request!(deleteMessages, bool);
+    request!(deleteMessageReaction, bool);
+    request!(deleteAllMessageReactions, bool);
     request_f!(sendSticker, Message, sticker);
     request!(getStickerSet, StickerSet);
 

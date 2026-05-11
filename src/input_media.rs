@@ -13,6 +13,7 @@ pub enum InputMedia {
     Animation(InputMediaAnimation),
     Document(InputMediaDocument),
     Audio(InputMediaAudio),
+    LivePhoto(InputMediaLivePhoto),
     Photo(InputMediaPhoto),
     Video(InputMediaVideo),
 }
@@ -32,6 +33,11 @@ impl From<InputMediaAudio> for InputMedia {
         Self::Audio(value)
     }
 }
+impl From<InputMediaLivePhoto> for InputMedia {
+    fn from(value: InputMediaLivePhoto) -> Self {
+        Self::LivePhoto(value)
+    }
+}
 impl From<InputMediaPhoto> for InputMedia {
     fn from(value: InputMediaPhoto) -> Self {
         Self::Photo(value)
@@ -43,14 +49,12 @@ impl From<InputMediaVideo> for InputMedia {
     }
 }
 
-/// Media relevant for `sendMediaGroup`.
-///
-/// See <https://core.telegram.org/bots/api#sendmediagroup>
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum MediaGroupInputMedia {
     Audio(InputMediaAudio),
     Document(InputMediaDocument),
+    LivePhoto(InputMediaLivePhoto),
     Photo(InputMediaPhoto),
     Video(InputMediaVideo),
 }
@@ -65,6 +69,11 @@ impl From<InputMediaDocument> for MediaGroupInputMedia {
         Self::Document(value)
     }
 }
+impl From<InputMediaLivePhoto> for MediaGroupInputMedia {
+    fn from(value: InputMediaLivePhoto) -> Self {
+        Self::LivePhoto(value)
+    }
+}
 impl From<InputMediaPhoto> for MediaGroupInputMedia {
     fn from(value: InputMediaPhoto) -> Self {
         Self::Photo(value)
@@ -74,6 +83,31 @@ impl From<InputMediaVideo> for MediaGroupInputMedia {
     fn from(value: InputMediaVideo) -> Self {
         Self::Video(value)
     }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum InputPollMedia {
+    Animation(InputMediaAnimation),
+    Audio(InputMediaAudio),
+    Document(InputMediaDocument),
+    LivePhoto(InputMediaLivePhoto),
+    Location(InputMediaLocation),
+    Photo(InputMediaPhoto),
+    Venue(InputMediaVenue),
+    Video(InputMediaVideo),
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum InputPollOptionMedia {
+    Animation(InputMediaAnimation),
+    LivePhoto(InputMediaLivePhoto),
+    Location(InputMediaLocation),
+    Photo(InputMediaPhoto),
+    Sticker(InputMediaSticker),
+    Venue(InputMediaVenue),
+    Video(InputMediaVideo),
 }
 
 #[apply(apistruct!)]
@@ -144,11 +178,57 @@ pub struct InputMediaDocument {
     pub disable_content_type_detection: Option<bool>,
 }
 
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct InputMediaLivePhoto {
+    pub media: FileUpload,
+    pub photo: FileUpload,
+    pub caption: Option<String>,
+    pub parse_mode: Option<ParseMode>,
+    pub caption_entities: Option<Vec<MessageEntity>>,
+    pub show_caption_above_media: Option<bool>,
+    pub has_spoiler: Option<bool>,
+}
+
+#[apply(apistruct!)]
+pub struct InputMediaLocation {
+    pub latitude: f64,
+    pub longitude: f64,
+    pub horizontal_accuracy: Option<f64>,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct InputMediaSticker {
+    pub media: FileUpload,
+    pub emoji: Option<String>,
+}
+
+#[apply(apistruct!)]
+pub struct InputMediaVenue {
+    pub latitude: f64,
+    pub longitude: f64,
+    pub title: String,
+    pub address: String,
+    pub foursquare_id: Option<String>,
+    pub foursquare_type: Option<String>,
+    pub google_place_id: Option<String>,
+    pub google_place_type: Option<String>,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum InputPaidMedia {
+    LivePhoto(InputPaidMediaLivePhoto),
     Photo(InputPaidMediaPhoto),
     Video(InputPaidMediaVideo),
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct InputPaidMediaLivePhoto {
+    pub media: String,
+    pub photo: String,
 }
 
 #[apply(apistruct!)]

@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::games::{CallbackGame, Game};
 use crate::gifts::{AcceptedGiftTypes, GiftInfo, UniqueGiftColors, UniqueGiftInfo};
+use crate::input_media::InputPollOptionMedia;
 use crate::macros::{apistruct, apply};
 use crate::parse_mode::ParseMode;
 use crate::passport::PassportData;
@@ -250,6 +251,7 @@ pub struct ChatMemberRestricted {
     pub can_send_polls: bool,
     pub can_send_other_messages: bool,
     pub can_add_web_page_previews: bool,
+    pub can_react_to_messages: bool,
     pub can_edit_tag: bool,
     pub can_change_info: bool,
     pub can_invite_users: bool,
@@ -314,6 +316,7 @@ pub enum AllowedUpdate {
     BusinessMessage,
     EditedBusinessMessage,
     DeletedBusinessMessages,
+    GuestMessage,
     MessageReaction,
     MessageReactionCount,
     InlineQuery,
@@ -345,6 +348,7 @@ pub struct User {
     pub added_to_attachment_menu: Option<bool>,
     pub can_join_groups: Option<bool>,
     pub can_read_all_group_messages: Option<bool>,
+    pub supports_guest_queries: Option<bool>,
     pub supports_inline_queries: Option<bool>,
     pub can_connect_to_business: Option<bool>,
     pub has_main_web_app: Option<bool>,
@@ -434,6 +438,7 @@ pub struct Message {
     pub sender_business_bot: Option<Box<User>>,
     pub sender_tag: Option<String>,
     pub date: u64,
+    pub guest_query_id: Option<String>,
     pub business_connection_id: Option<String>,
     pub chat: Box<Chat>,
     pub forward_origin: Option<Box<MessageOrigin>>,
@@ -446,6 +451,8 @@ pub struct Message {
     pub reply_to_checklist_task_id: Option<i64>,
     pub reply_to_poll_option_id: Option<String>,
     pub via_bot: Option<Box<User>>,
+    pub guest_bot_caller_user: Option<Box<User>>,
+    pub guest_bot_caller_chat: Option<Box<Chat>>,
     pub edit_date: Option<u64>,
     pub has_protected_content: Option<bool>,
     pub is_from_offline: Option<bool>,
@@ -460,6 +467,7 @@ pub struct Message {
     pub animation: Option<Box<Animation>>,
     pub audio: Option<Box<Audio>>,
     pub document: Option<Box<Document>>,
+    pub live_photo: Option<Box<LivePhoto>>,
     pub paid_media: Option<Box<PaidMediaInfo>>,
     pub photo: Option<Vec<PhotoSize>>,
     pub sticker: Option<Box<Sticker>>,
@@ -575,6 +583,7 @@ pub struct ExternalReplyInfo {
     pub animation: Option<Animation>,
     pub audio: Option<Audio>,
     pub document: Option<Document>,
+    pub live_photo: Option<LivePhoto>,
     pub paid_media: Option<PaidMediaInfo>,
     pub photo: Option<Vec<PhotoSize>>,
     pub sticker: Option<Sticker>,
@@ -764,6 +773,19 @@ pub struct Video {
 
 #[apply(apistruct!)]
 #[derive(Eq)]
+pub struct LivePhoto {
+    pub photo: Option<Vec<PhotoSize>>,
+    pub file_id: String,
+    pub file_unique_id: String,
+    pub width: u32,
+    pub height: u32,
+    pub duration: u32,
+    pub mime_type: Option<String>,
+    pub file_size: Option<u64>,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
 pub struct VideoNote {
     pub file_id: String,
     pub file_unique_id: String,
@@ -801,11 +823,24 @@ pub struct Dice {
 }
 
 #[apply(apistruct!)]
-#[derive(Eq)]
+pub struct PollMedia {
+    pub animation: Option<Animation>,
+    pub audio: Option<Audio>,
+    pub document: Option<Document>,
+    pub live_photo: Option<LivePhoto>,
+    pub location: Option<Location>,
+    pub photo: Option<Vec<PhotoSize>>,
+    pub sticker: Option<Sticker>,
+    pub venue: Option<Venue>,
+    pub video: Option<Video>,
+}
+
+#[apply(apistruct!)]
 pub struct PollOption {
     pub persistent_id: Option<String>,
     pub text: String,
     pub text_entities: Option<Vec<MessageEntity>>,
+    pub media: Option<PollMedia>,
     pub voter_count: u32,
     pub added_by_user: Option<User>,
     pub added_by_chat: Option<Box<Chat>>,
@@ -813,11 +848,11 @@ pub struct PollOption {
 }
 
 #[apply(apistruct!)]
-#[derive(Eq)]
 pub struct InputPollOption {
     pub text: Option<String>,
     pub text_parse_mode: Option<ParseMode>,
     pub text_entities: Option<Vec<MessageEntity>>,
+    pub media: Option<InputPollOptionMedia>,
 }
 
 #[apply(apistruct!)]
@@ -831,7 +866,6 @@ pub struct PollAnswer {
 }
 
 #[apply(apistruct!)]
-#[derive(Eq)]
 pub struct Poll {
     pub id: String,
     pub question: String,
@@ -844,13 +878,17 @@ pub struct Poll {
     pub type_field: PollType,
     pub allows_multiple_answers: Option<bool>,
     pub allows_revoting: Option<bool>,
+    pub members_only: Option<bool>,
+    pub country_codes: Option<Vec<String>>,
     pub correct_option_ids: Option<Vec<u8>>,
     pub explanation: Option<String>,
     pub explanation_entities: Option<Vec<MessageEntity>>,
+    pub explanation_media: Option<PollMedia>,
     pub open_period: Option<u32>,
     pub close_date: Option<u64>,
     pub description: Option<String>,
     pub description_entities: Option<Vec<MessageEntity>>,
+    pub media: Option<PollMedia>,
 }
 
 #[apply(apistruct!)]
@@ -1326,6 +1364,7 @@ pub struct ChatPermissions {
     pub can_send_polls: Option<bool>,
     pub can_send_other_messages: Option<bool>,
     pub can_add_web_page_previews: Option<bool>,
+    pub can_react_to_messages: Option<bool>,
     pub can_edit_tag: Option<bool>,
     pub can_change_info: Option<bool>,
     pub can_invite_users: Option<bool>,
@@ -1525,6 +1564,13 @@ pub struct BotCommand {
 
 #[apply(apistruct!)]
 #[derive(Eq)]
+pub struct BotAccessSettings {
+    pub is_access_restricted: bool,
+    pub added_users: Option<Vec<User>>,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
 pub struct Story {
     pub chat: Chat,
     pub id: u64,
@@ -1541,6 +1587,7 @@ pub struct PaidMediaInfo {
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum PaidMedia {
     Preview(PaidMediaPreview),
+    LivePhoto(PaidMediaLivePhoto),
     Photo(PaidMediaPhoto),
     Video(Box<PaidMediaVideo>),
 }
@@ -1557,6 +1604,12 @@ pub struct PaidMediaPreview {
 #[derive(Eq)]
 pub struct PaidMediaPhoto {
     pub photo: Vec<PhotoSize>,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct PaidMediaLivePhoto {
+    pub live_photo: LivePhoto,
 }
 
 #[apply(apistruct!)]

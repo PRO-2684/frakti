@@ -512,6 +512,12 @@ pub struct SentWebAppMessage {
 
 #[apply(apistruct!)]
 #[derive(Eq)]
+pub struct SentGuestMessage {
+    pub inline_message_id: String,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
 pub struct PreparedInlineMessage {
     pub id: String,
     pub expiration_date: u64,

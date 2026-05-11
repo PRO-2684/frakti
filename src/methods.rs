@@ -4,7 +4,8 @@ use crate::gifts::AcceptedGiftTypes;
 use crate::inline_mode::{InlineQueryResult, InlineQueryResultsButton};
 use crate::input_file::{FileUpload, InputFile};
 use crate::input_media::{
-    InputMedia, InputPaidMedia, InputProfilePhoto, InputStoryContent, MediaGroupInputMedia,
+    InputMedia, InputPaidMedia, InputPollMedia, InputProfilePhoto, InputStoryContent,
+    MediaGroupInputMedia,
 };
 use crate::macros::{apistruct, apply};
 use crate::parse_mode::ParseMode;
@@ -293,6 +294,29 @@ pub struct SendVideoNoteParams {
 
 #[apply(apistruct!)]
 #[derive(Eq)]
+pub struct SendLivePhotoParams {
+    pub business_connection_id: Option<String>,
+    pub chat_id: ChatId,
+    pub message_thread_id: Option<i32>,
+    pub direct_messages_topic_id: Option<i64>,
+    pub media: FileUpload,
+    pub photo: FileUpload,
+    pub caption: Option<String>,
+    pub parse_mode: Option<ParseMode>,
+    pub caption_entities: Option<Vec<MessageEntity>>,
+    pub show_caption_above_media: Option<bool>,
+    pub has_spoiler: Option<bool>,
+    pub disable_notification: Option<bool>,
+    pub protect_content: Option<bool>,
+    pub allow_paid_broadcast: Option<bool>,
+    pub message_effect_id: Option<String>,
+    pub suggested_post_parameters: Option<SuggestedPostParameters>,
+    pub reply_parameters: Option<ReplyParameters>,
+    pub reply_markup: Option<ReplyMarkup>,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
 pub struct SendPaidMediaParams {
     pub business_connection_id: Option<String>,
     pub chat_id: ChatId,
@@ -428,7 +452,6 @@ pub struct SendContactParams {
 }
 
 #[apply(apistruct!)]
-#[derive(Eq)]
 pub struct SendPollParams {
     pub business_connection_id: Option<String>,
     pub chat_id: ChatId,
@@ -445,16 +468,20 @@ pub struct SendPollParams {
     pub shuffle_options: Option<bool>,
     pub allow_adding_options: Option<bool>,
     pub hide_results_until_closes: Option<bool>,
+    pub members_only: Option<bool>,
+    pub country_codes: Option<Vec<String>>,
     pub correct_option_ids: Option<Vec<u8>>,
     pub explanation: Option<String>,
     pub explanation_parse_mode: Option<ParseMode>,
     pub explanation_entities: Option<Vec<MessageEntity>>,
+    pub explanation_media: Option<InputPollMedia>,
     pub open_period: Option<u32>,
     pub close_date: Option<u64>,
     pub is_closed: Option<bool>,
     pub description: Option<String>,
     pub description_parse_mode: Option<ParseMode>,
     pub description_entities: Option<Vec<MessageEntity>>,
+    pub media: Option<InputPollMedia>,
     pub disable_notification: Option<bool>,
     pub protect_content: Option<bool>,
     pub allow_paid_broadcast: Option<bool>,
@@ -548,6 +575,20 @@ pub struct GetManagedBotTokenParams {
 #[derive(Eq)]
 pub struct ReplaceManagedBotTokenParams {
     pub user_id: u64,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct GetManagedBotAccessSettingsParams {
+    pub user_id: u64,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct SetManagedBotAccessSettingsParams {
+    pub user_id: u64,
+    pub is_access_restricted: bool,
+    pub added_user_ids: Option<Vec<u64>>,
 }
 
 #[apply(apistruct!)]
@@ -784,6 +825,7 @@ pub struct GetChatParams {
 #[derive(Eq)]
 pub struct GetChatAdministratorsParams {
     pub chat_id: ChatId,
+    pub return_bots: Option<bool>,
 }
 
 #[apply(apistruct!)]
@@ -797,6 +839,13 @@ pub struct GetChatMemberCountParams {
 pub struct GetChatMemberParams {
     pub chat_id: ChatId,
     pub user_id: u64,
+}
+
+#[apply(apistruct!)]
+#[derive(Copy, Eq)]
+pub struct GetUserPersonalChatMessagesParams {
+    pub user_id: u64,
+    pub limit: u8,
 }
 
 #[apply(apistruct!)]
@@ -897,6 +946,12 @@ pub struct AnswerCallbackQueryParams {
     pub show_alert: Option<bool>,
     pub url: Option<String>,
     pub cache_time: Option<u32>,
+}
+
+#[apply(apistruct!)]
+pub struct AnswerGuestQueryParams {
+    pub guest_query_id: String,
+    pub result: crate::inline_mode::InlineQueryResult,
 }
 
 #[apply(apistruct!)]
@@ -1064,6 +1119,23 @@ pub struct DeleteMessageParams {
 pub struct DeleteMessagesParams {
     pub chat_id: ChatId,
     pub message_ids: Vec<i32>,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct DeleteMessageReactionParams {
+    pub chat_id: ChatId,
+    pub message_id: i32,
+    pub user_id: Option<u64>,
+    pub actor_chat_id: Option<i64>,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct DeleteAllMessageReactionsParams {
+    pub chat_id: ChatId,
+    pub user_id: Option<u64>,
+    pub actor_chat_id: Option<i64>,
 }
 
 #[apply(apistruct!)]
