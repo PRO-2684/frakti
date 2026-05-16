@@ -87,10 +87,7 @@ macro_rules! request_f {
     }
 }
 
-pub trait AsyncTelegramApi
-where
-    Self: Sync,
-{
+pub trait AsyncTelegramApi {
     type Error;
 
     request!(getUpdates, Vec<Update>);

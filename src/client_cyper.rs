@@ -17,7 +17,7 @@ pub struct Bot {
     #[builder(into)]
     pub api_url: String,
 
-    #[builder(default = Client::new())]
+    #[builder(default = Client::new().expect("Failed to create HTTP client"))]
     pub client: Client,
 }
 

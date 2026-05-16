@@ -9,7 +9,10 @@ fn custom_client() -> Bot {
     let client = frakti::cyper::ClientBuilder::new().build();
     let api_url = format!("{BASE_API_URL}{token}");
 
-    Bot::builder().api_url(api_url).client(client).build()
+    Bot::builder()
+        .api_url(api_url)
+        .client(client.unwrap())
+        .build()
 }
 
 #[compio::main]
