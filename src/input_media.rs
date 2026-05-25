@@ -49,6 +49,9 @@ impl From<InputMediaVideo> for InputMedia {
     }
 }
 
+/// Media relevant for `sendMediaGroup`.
+///
+/// See <https://core.telegram.org/bots/api#sendmediagroup>
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum MediaGroupInputMedia {

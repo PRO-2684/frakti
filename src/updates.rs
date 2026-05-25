@@ -42,7 +42,7 @@ pub enum UpdateContent {
     CallbackQuery(Box<CallbackQuery>),
     ShippingQuery(ShippingQuery),
     PreCheckoutQuery(PreCheckoutQuery),
-    Poll(Poll),
+    Poll(Box<Poll>),
     PollAnswer(PollAnswer),
     MyChatMember(ChatMemberUpdated),
     ChatMember(ChatMemberUpdated),

@@ -185,16 +185,15 @@ pub trait TelegramApi {
                     replace_attach!(live_photo.media);
                     replace_attach!(live_photo.photo);
                 }
-                InputPollMedia::Location(_) => {}
                 InputPollMedia::Photo(photo) => {
                     replace_attach!(photo.media);
                 }
-                InputPollMedia::Venue(_) => {}
                 InputPollMedia::Video(video) => {
                     replace_attach!(video.media);
                     replace_attach!(video.cover);
                     replace_attach!(video.thumbnail);
                 }
+                _ => {}
             }
         }
 
@@ -219,19 +218,18 @@ pub trait TelegramApi {
                     replace_attach!(live_photo.media);
                     replace_attach!(live_photo.photo);
                 }
-                InputPollOptionMedia::Location(_) => {}
                 InputPollOptionMedia::Photo(photo) => {
                     replace_attach!(photo.media);
                 }
                 InputPollOptionMedia::Sticker(sticker) => {
                     replace_attach!(sticker.media);
                 }
-                InputPollOptionMedia::Venue(_) => {}
                 InputPollOptionMedia::Video(video) => {
                     replace_attach!(video.media);
                     replace_attach!(video.cover);
                     replace_attach!(video.thumbnail);
                 }
+                _ => {}
             }
         }
 
