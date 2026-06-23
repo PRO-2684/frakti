@@ -3,12 +3,12 @@ use std::{fmt::Debug, path::PathBuf};
 use bon::Builder;
 use compio::fs::File;
 use cyper::{
-    multipart::{Form, Part},
     Client, Error as CyperError, Response,
+    multipart::{Form, Part},
 };
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{Serialize, de::DeserializeOwned};
 
-use super::{json::encode_object, trait_async::AsyncTelegramApi, Error, BASE_API_URL};
+use super::{BASE_API_URL, Error, json::encode_object, trait_async::AsyncTelegramApi};
 
 /// Asynchronous [`AsyncTelegramApi`] implementation with [`cyper`]
 #[derive(Debug, Clone, Builder)]

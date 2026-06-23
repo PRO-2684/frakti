@@ -1,8 +1,8 @@
+use frakti::AsyncTelegramApi;
 use frakti::client_cyper::Bot;
 use frakti::methods::{GetUpdatesParams, SendMessageParams};
 use frakti::types::{Message, ReplyParameters};
 use frakti::updates::UpdateContent;
-use frakti::AsyncTelegramApi;
 
 #[compio::main]
 async fn main() {

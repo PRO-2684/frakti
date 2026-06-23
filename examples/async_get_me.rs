@@ -1,5 +1,5 @@
-use frakti::client_cyper::Bot;
 use frakti::AsyncTelegramApi;
+use frakti::client_cyper::Bot;
 
 #[compio::main]
 async fn main() {

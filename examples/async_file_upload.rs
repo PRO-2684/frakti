@@ -1,6 +1,6 @@
+use frakti::AsyncTelegramApi;
 use frakti::client_cyper::Bot;
 use frakti::methods::SendPhotoParams;
-use frakti::AsyncTelegramApi;
 
 #[compio::main]
 async fn main() {

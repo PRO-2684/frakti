@@ -1,5 +1,5 @@
-use frakti::client_cyper::Bot;
 use frakti::AsyncTelegramApi;
+use frakti::client_cyper::Bot;
 
 static BASE_API_URL: &str = "https://api.telegram.org/bot";
 
