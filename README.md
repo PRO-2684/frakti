@@ -2,6 +2,8 @@
 
 # Frakti - Frankenstein without `Send`
 
+## Feature Comparison
+
 Frakti is a Telegram bot API client for Rust, with a focus on single-threaded async runtime support. Forked from [frankenstein](https://github.com/ayrat555/frankenstein), it is different in the following ways:
 
 | Feature                 | frankenstein     | frakti        |
@@ -13,3 +15,7 @@ Frakti is a Telegram bot API client for Rust, with a focus on single-threaded as
 | Single-threaded runtime | Need workarounds | Supported     |
 
 To summarize, frakti is your choice if you want a frankenstein alternative on a non-WASM platform and a single-threaded async runtime (like `compio`).
+
+## Versioning Policy
+
+`frakti` follows the versioning policy of `frankenstein`, starting from `0.50.1`.
