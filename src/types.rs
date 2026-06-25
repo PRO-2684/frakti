@@ -1910,7 +1910,7 @@ pub struct PollOptionDeleted {
 #[cfg(test)]
 mod serde_tests {
     use super::*;
-    use crate::rich_message::{RichBlock, RichText, RichTextObject};
+    use crate::rich_message::{InputRichMessage, RichBlock, RichText, RichTextObject};
 
     #[test]
     pub fn kicked_user_status_is_parsed() {
